@@ -10,7 +10,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
   const location = useLocation();
-  const { isLoggedIn, logout } = useAuth(); // Access both isLoggedIn and logout
+  const { isLoggedIn, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -76,21 +76,24 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
         </ul>
       </nav>
 
+      {/* This new block is placed before the footer */}
+      {!isLoggedIn && (
+        <div className="auth-links-container">
+          <Link to="/login" className="login-btn">
+            <span>Login</span>
+          </Link>
+          <Link to="/register" className="register-btn">
+            <span>Register</span>
+          </Link>
+        </div>
+      )}
+
       <div className="sidebar-footer">
-        {isLoggedIn ? (
+        {isLoggedIn && (
           <button className="logout-btn" onClick={handleLogout}>
             <span className="logout-icon">⬅️</span>
             <span>Logout</span>
           </button>
-        ) : (
-          <div className="auth-links">
-            <Link to="/login" className="login-btn">
-              <span>Login</span>
-            </Link>
-            <Link to="/register" className="register-btn">
-              <span>Register</span>
-            </Link>
-          </div>
         )}
       </div>
     </div>

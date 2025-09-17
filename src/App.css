@@ -41,7 +41,6 @@ html, body, #root {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-right: 1px solid #303050;
 }
 
@@ -51,6 +50,66 @@ html, body, #root {
   align-items: center;
   margin-bottom: 20px;
 }
+
+.sidebar-footer {
+  padding-top: 20px;
+  margin-top: auto;
+  border-top: 1px solid #303050;
+}
+
+
+/* --- Auth Links in Sidebar --- */
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-links-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border-top: 1px solid #303050; /* Add a line to separate it from the nav */
+  margin-top: 20px; /* Add some space from the bottom of the nav */
+}
+
+
+.login-btn,
+.register-btn {
+  display: block;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.login-btn {
+  background: linear-gradient(90deg, #6c63ff, #8a2be2);
+  color: white;
+}
+
+.register-btn {
+  background-color: #303050;
+  color: #c0c0d0;
+  border: 1px solid #404060;
+}
+
+.login-btn:hover,
+.register-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.sidebar-footer .auth-links {
+  margin-top: auto; 
+  padding-top: 20px;
+  border-top: 1px solid #303050;
+}
+
+
 
 .logo-container {
   display: flex;
