@@ -392,3 +392,142 @@ html, body, #root {
   font-size: 1.2rem;
   cursor: pointer;
 }
+
+/* --- RESPONSIVE MEDIA QUERIES --- */
+
+/* For Tablets and smaller devices (up to 1024px) */
+@media (max-width: 1024px) {
+  /* Make the sidebar slightly smaller */
+  .sidebar {
+    width: 200px;
+    padding: 15px;
+  }
+
+  /* Adjust the main content area */
+  .main-content {
+    max-width: calc(100vw - 200px);
+    padding: 15px;
+  }
+
+  /* Make the dashboard header font a little smaller */
+  .header-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* For Mobile devices (up to 768px) */
+@media (max-width: 768px) {
+  /* Change the overall layout to a single column and hide the sidebar */
+  .app-container {
+    flex-direction: column;
+  }
+
+
+  .sidebar {
+    display: none;
+  }
+
+  /* Make the main content take full width */
+  .main-content {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  /* Stack the top summary cards and charts vertically */
+  .top-cards-row {
+    flex-direction: column;
+  }
+
+  .charts-container {
+    grid-template-columns: 1fr; 
+    gap: 15px;
+  }
+
+
+  .coin-list-card {
+    overflow-x: auto;
+  }
+  
+  .coin-list-table {
+    width: 700px; 
+  }
+}
+
+
+
+
+/* --- RESPONSIVE MEDIA QUERIES --- */
+
+/* For Mobile devices (up to 768px) */
+@media (max-width: 768px) {
+ 
+  
+  /* Mobile menu button and avatar container */
+  .user-profile-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  /* Mobile menu button styling */
+  .mobile-menu-button {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+  .mobile-menu-button .bar {
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    border-radius: 2px;
+  }
+  
+  /* Sidebar for mobile - slides in from the right */
+  .sidebar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: -250px; /* Hidden off-screen by default */
+    bottom: 0;
+    width: 250px;
+    background-color: #20203a;
+    padding: 20px;
+    z-index: 100;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+    border-right: none;
+  }
+
+  .sidebar.mobile-open {
+    right: 0; /* Slide in when the menu is open */
+  }
+
+  /* Overlay for when mobile menu is open */
+  .mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 90;
+    cursor: pointer;
+  }
+
+  /* Hide the hamburger on desktop */
+  .mobile-menu-button {
+    display: none;
+  }
+
+  /* Adjustments to show the hamburger on mobile */
+  @media (max-width: 768px) {
+    .user-profile-actions .mobile-menu-button {
+      display: flex;
+    }
+  }
+}

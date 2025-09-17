@@ -1,11 +1,14 @@
-// src/components/dashboard/Dashboard.tsx
 import React from 'react';
 import DashboardHeader from './DashboardHeader';
 import SummaryCard from './SummaryCard';
 import CryptoChart from './CryptoChart';
 import CoinListTable from './CoinListTable';
 
-const Dashboard = () => {
+interface DashboardProps {
+  toggleMenu: () => void;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ toggleMenu }) => {
   // Mock data for the line charts
   const totalCoinData = [40, 45, 42, 50, 55, 52, 60]; 
   const activeUserData = [25, 23, 20, 18, 15, 12, 10]; 
@@ -24,22 +27,22 @@ const Dashboard = () => {
   
   const progressiveChartData = {
     datasets: [{
-      borderColor: 'rgba(108, 99, 255, 1)', // Blue color for the first line
+      borderColor: 'rgba(108, 99, 255, 1)', 
       backgroundColor: 'rgba(108, 99, 255, 0.4)',
       data: generateProgressiveData(100, 150),
       radius: 0
     },
     {
-      borderColor: 'rgba(255, 99, 132, 1)', // Red color for the second line
+      borderColor: 'rgba(255, 99, 132, 1)', 
       backgroundColor: 'rgba(255, 99, 132, 0.4)',
-      data: generateProgressiveData(80, 150), // New data for the second line
+      data: generateProgressiveData(80, 150),
       radius: 0
     }]
   };
 
   return (
     <div className="dashboard-container">
-      <DashboardHeader />
+      <DashboardHeader toggleMenu={toggleMenu} />
       
       <div className="dashboard-content">
         <div className="top-cards-row">

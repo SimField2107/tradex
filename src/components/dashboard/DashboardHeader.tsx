@@ -1,14 +1,23 @@
+// src/components/dashboard/DashboardHeader.tsx
 import React from 'react';
 
-const DashboardHeader = () => {
+interface DashboardHeaderProps {
+  toggleMenu: () => void;
+}
+
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({ toggleMenu }) => {
   return (
     <header className="dashboard-header">
       <h1 className="header-title">Dashboard</h1>
       <div className="user-profile-actions">
-        {/* Placeholder for notification bell icon */}
         <span className="icon-button">🔔</span>
-        {/* Placeholder for user avatar with initials */}
         <div className="user-avatar">K</div>
+        {/* Mobile menu button */}
+        <div className="mobile-menu-button" onClick={toggleMenu}>
+          <div className="bar"></div>
+          <div className="bar"></div>
+          <div className="bar"></div>
+        </div>
       </div>
     </header>
   );

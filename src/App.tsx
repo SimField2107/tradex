@@ -1,14 +1,26 @@
-import React from 'react';
-import './App.css'; // Make sure the stylesheet is imported
+// src/App.tsx
+import React, { useState } from 'react';
+import './App.css';
 import Sidebar from './components/dashboard/Sidebar';
 import Dashboard from './components/dashboard/Dashboard';
 
 function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div className="app-container">
-      <Sidebar />
+      {/* Conditionally render the sidebar */}
+      <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+      
+      {/* Overlay for mobile menu */}
+      {isMenuOpen && <div className="mobile-menu-overlay" onClick={toggleMenu}></div>}
+
       <main className="main-content">
-        <Dashboard />
+        <Dashboard toggleMenu={toggleMenu} />
       </main>
     </div>
   );
