@@ -1,7 +1,8 @@
 import React from 'react';
-import TotalBalanceCard from './TotalBalanceCard';
+import TotalBalanceCard from './TotalBalanceCard'; // We'll keep this one for now
 import CryptoChart from './CryptoChart';
 import CoinListTable from './CoinListTable';
+import SummaryCard from './SummaryCard';
 
 const Dashboard = () => {
   // Mock data for the graphs
@@ -11,33 +12,16 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      {/* We will build the header with the user profile later */}
       <div className="dashboard-header">
         <h1>Dashboard</h1>
       </div>
       
       <div className="dashboard-content">
-        {/*
-          The screenshot shows the total balance and two other small cards
-          at the top, with the two large charts below them. We'll adjust the
-          layout to match that.
-        */}
+        {/* The row for the three summary cards */}
         <div className="top-cards-row">
-            {/* The small cards for "Total Users" and "Active Users Today" go here.
-               For now, we'll just add a placeholder.
-            */}
-            <div className="placeholder-card">
-              <h3>Total Users</h3>
-              <p>2,742</p>
-            </div>
-            <div className="placeholder-card">
-              <h3>Active Users Today</h3>
-              <p>2,742</p>
-            </div>
-            <div className="placeholder-card">
-              <h3>Total Coin</h3>
-              <p>8,679</p>
-            </div>
+            <SummaryCard title="Total Users" value="2,742" icon="👥" />
+            <SummaryCard title="Active Users Today" value="2,742" icon="📈" />
+            <SummaryCard title="Total Coin" value="8,679" icon="🪙" />
         </div>
 
         {/* The two main charts */}
