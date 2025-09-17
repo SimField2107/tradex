@@ -1,6 +1,7 @@
+// src/components/dashboard/Sidebar.tsx
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 interface SidebarProps {
   isMenuOpen: boolean;
@@ -9,6 +10,12 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
   const location = useLocation();
+  const { isLoggedIn, logout } = useAuth(); // Access both isLoggedIn and logout
+
+  const handleLogout = () => {
+    logout();
+    toggleMenu();
+  };
 
   return (
     <div className={`sidebar ${isMenuOpen ? 'mobile-open' : ''}`}>
@@ -70,10 +77,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
       </nav>
 
       <div className="sidebar-footer">
-        <button className="logout-btn" onClick={toggleMenu}>
-          <span className="logout-icon">⬅️</span>
-          <span>Logout</span>
-        </button>
+        {isLoggedIn ? (
+          <button className="logout-btn" onClick={handleLogout}>
+            <span className="logout-icon">⬅️</span>
+            <span>Logout</span>
+          </button>
+        ) : (
+          <div className="auth-links">
+            <Link to="/login" className="login-btn">
+              <span>Login</span>
+            </Link>
+            <Link to="/register" className="register-btn">
+              <span>Register</span>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

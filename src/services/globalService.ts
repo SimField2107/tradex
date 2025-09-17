@@ -1,7 +1,8 @@
 // src/services/globalService.ts
 import axios from 'axios';
 
-const API_BASE_URL = 'https://api.coingecko.com/api/v3';
+// Use the proxy path to avoid CORS errors
+const API_BASE_URL = '/api';
 
 export const fetchGlobalData = async () => {
   try {

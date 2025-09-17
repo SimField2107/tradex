@@ -1,7 +1,14 @@
+// src/services/cryptoService.ts
+
 import axios from 'axios';
 
-const API_BASE_URL = 'https://api.coingecko.com/api/v3';
+// Use the proxy path defined in vite.config.ts to avoid CORS errors
+const API_BASE_URL = '/api';
 
+/**
+ * Fetches a list of coin markets with their market data.
+ * @returns An array of coin market data.
+ */
 export const fetchCoinMarkets = async () => {
   try {
     const response = await axios.get(`${API_BASE_URL}/coins/markets`, {
@@ -10,6 +17,7 @@ export const fetchCoinMarkets = async () => {
         order: 'market_cap_desc',
         per_page: 100,
         page: 1,
+        // The markets endpoint does not support sparkline data, so it's best to disable it
         sparkline: false,
       },
     });
@@ -20,6 +28,12 @@ export const fetchCoinMarkets = async () => {
   }
 };
 
+/**
+ * Fetches historical market data (prices, market cap) for a specific coin.
+ * @param coinId The ID of the cryptocurrency (e.g., 'bitcoin').
+ * @param days The number of days of historical data to fetch.
+ * @returns An array of price data.
+ */
 export const fetchMarketChart = async (coinId: string, days: number = 7) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/coins/${coinId}/market_chart`, {
@@ -31,16 +45,6 @@ export const fetchMarketChart = async (coinId: string, days: number = 7) => {
     return response.data.prices;
   } catch (error) {
     console.error(`Error fetching market chart for ${coinId}:`, error);
-    throw error;
-  }
-};
-
-export const fetchGlobalData = async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/global`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching global data:', error);
     throw error;
   }
 };
