@@ -3,7 +3,7 @@ import React from 'react';
 interface SummaryCardProps {
   title: string;
   value: string;
-  icon?: string; // Optional icon, we'll use a string placeholder for now
+  icon?: string; 
 }
 
 const SummaryCard: React.FC<SummaryCardProps> = ({ title, value, icon }) => {

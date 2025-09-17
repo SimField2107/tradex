@@ -11,6 +11,13 @@
   box-sizing: border-box;
 }
 
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden; 
+}
+
 /* --- Global App Layout --- */
 .app-container {
   display: flex;
@@ -335,4 +342,53 @@
   font-size: 1.8rem;
   font-weight: bold;
   color: white;
+}
+
+
+
+/* --- Dashboard Header Styling --- */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #303050; /* A subtle line at the bottom */
+}
+
+.header-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.user-profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.icon-button {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #c0c0d0;
+  transition: color 0.2s ease;
+}
+
+.icon-button:hover {
+  color: white;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ff6347;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
