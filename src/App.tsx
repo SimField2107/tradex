@@ -1,8 +1,9 @@
-// src/App.tsx
 import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Sidebar from './components/dashboard/Sidebar';
 import Dashboard from './components/dashboard/Dashboard';
+import WalletPage from './components/dashboard/WalletPage'; 
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,17 +13,22 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      {/* Conditionally render the sidebar */}
-      <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-      
-      {/* Overlay for mobile menu */}
-      {isMenuOpen && <div className="mobile-menu-overlay" onClick={toggleMenu}></div>}
+    <BrowserRouter>
+      <div className="app-container">
+        <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        {isMenuOpen && <div className="mobile-menu-overlay" onClick={toggleMenu}></div>}
 
-      <main className="main-content">
-        <Dashboard toggleMenu={toggleMenu} />
-      </main>
-    </div>
+        <main className="main-content">
+          <Routes>
+            {/* Main Dashboard Route */}
+            <Route path="/" element={<Dashboard toggleMenu={toggleMenu} />} />
+            
+            {/* Wallet Page Route */}
+            <Route path="/wallet" element={<WalletPage />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
 
