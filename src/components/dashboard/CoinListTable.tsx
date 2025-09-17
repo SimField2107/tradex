@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -9,6 +9,7 @@ import {
   Tooltip,
   Filler,
 } from 'chart.js';
+import { fetchCoinMarkets } from '../../services/cryptoService';
 
 ChartJS.register(
   CategoryScale,
@@ -20,70 +21,41 @@ ChartJS.register(
 );
 
 interface Coin {
-  id: number;
+  id: string;
   name: string;
   symbol: string;
-  logo: string;
-  price: number;
-  '24hChange': number;
-  '7dChange': number;
-  marketCap: number;
-  volume: number;
-  sparkline: number[];
+  image: string;
+  current_price: number;
+  price_change_percentage_24h: number;
+  price_change_percentage_7d_in_currency: number;
+  market_cap: number;
+  total_volume: number;
+  sparkline_in_7d: {
+    price: number[];
+  };
 }
 
-const MOCK_COINS: Coin[] = [
-  {
-    id: 1,
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    logo: 'btc-logo.png',
-    price: 80374.94,
-    '24hChange': -0.54,
-    '7dChange': -0.35,
-    marketCap: 51.3198,
-    volume: 59.1228,
-    sparkline: [60, 58, 62, 59, 65, 61, 68]
-  },
-  {
-    id: 2,
-    name: 'Ethereum',
-    symbol: 'ETH',
-    logo: 'eth-logo.png',
-    price: 80374.94,
-    '24hChange': 0.65,
-    '7dChange': -0.35,
-    marketCap: 89.4138,
-    volume: 56.1348,
-    sparkline: [50, 52, 48, 55, 51, 58, 54]
-  },
-  {
-    id: 3,
-    name: 'Tether',
-    symbol: 'USDT',
-    logo: 'usdt-logo.png',
-    price: 80374.94,
-    '24hChange': 0.35,
-    '7dChange': 0.35,
-    marketCap: 72.1628,
-    volume: 84.2268,
-    sparkline: [5, 6, 7, 6, 8, 7, 9]
-  },
-  {
-    id: 4,
-    name: 'Polygon',
-    symbol: 'MATIC',
-    logo: 'matic-logo.png',
-    price: 80374.94,
-    '24hChange': 0.95,
-    '7dChange': 0.35,
-    marketCap: 54.1788,
-    volume: 24.1268,
-    sparkline: [40, 42, 38, 45, 41, 48, 44]
-  }
-];
-
 const CoinListTable = () => {
+  const [coins, setCoins] = useState<Coin[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getCoinData = async () => {
+      try {
+        const data: Coin[] = await fetchCoinMarkets();
+        setCoins(data);
+        setIsLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch coin data:', err);
+        setError('Failed to fetch coin data. Please try again later.');
+        setIsLoading(false);
+      }
+    };
+
+    getCoinData();
+  }, []);
+
   const sparklineOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -111,6 +83,14 @@ const CoinListTable = () => {
     }],
   });
 
+  if (isLoading) {
+    return <div className="coin-list-card">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="coin-list-card text-red">{error}</div>;
+  }
+
   return (
     <div className="coin-list-card">
       <div className="coin-list-header">
@@ -120,36 +100,33 @@ const CoinListTable = () => {
         <thead>
           <tr>
             <th>#</th>
-            <th>User Name</th>
+            <th>Name</th>
             <th>Price</th>
-            <th>02%</th>
-            <th>24h</th>
-            <th>7d%</th>
+            <th>24h %</th>
+            <th>7d %</th>
             <th>Market Cap</th>
             <th>Volume</th>
             <th>Last 24h</th>
           </tr>
         </thead>
         <tbody>
-          {MOCK_COINS.map(coin => (
+          {coins.slice(0, 10).map((coin, index) => ( // Slicing to show top 10 coins
             <tr key={coin.id}>
-              <td>{coin.id}</td>
+              <td>{index + 1}</td>
               <td>
                 <div className="coin-name-container">
-                  <img src={coin.logo} alt={coin.symbol} className="coin-logo" />
-                  <span>{coin.name} ({coin.symbol})</span>
+                  <img src={coin.image} alt={coin.symbol} className="coin-logo" />
+                  <span>{coin.name} ({coin.symbol.toUpperCase()})</span>
                 </div>
               </td>
-              <td>${coin.price.toFixed(2)}</td>
-              <td className={coin['24hChange'] > 0 ? 'text-green' : 'text-red'}>{coin['24hChange'].toFixed(2)}%</td>
-              <td className={coin['7dChange'] > 0 ? 'text-green' : 'text-red'}>{coin['7dChange'].toFixed(2)}%</td>
-              <td>${coin.marketCap}B</td>
-              <td>${coin.volume}B</td>
-              <td>
-                <div className="sparkline-container">
-                  <Line data={getSparklineData(coin.sparkline, coin['24hChange'] > 0)} options={sparklineOptions} />
-                </div>
+              <td>${coin.current_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td className={coin.price_change_percentage_24h > 0 ? 'text-green' : 'text-red'}>
+                {coin.price_change_percentage_24h.toFixed(2)}%
               </td>
+              <td>-</td> {/* Data not available in this endpoint */}
+              <td>${(coin.market_cap / 1e9).toFixed(2)}B</td>
+              <td>${(coin.total_volume / 1e9).toFixed(2)}B</td>
+              <td>-</td> {/* Sparkline data is not available in the markets endpoint */}
             </tr>
           ))}
         </tbody>

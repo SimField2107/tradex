@@ -1,20 +1,56 @@
-import React from 'react';
+// src/components/dashboard/Dashboard.tsx
+import React, { useState, useEffect } from 'react';
 import DashboardHeader from './DashboardHeader';
 import SummaryCard from './SummaryCard';
 import CryptoChart from './CryptoChart';
 import CoinListTable from './CoinListTable';
+import { fetchMarketChart } from '../../services/cryptoService';
+import { fetchGlobalData } from '../../services/globalService'; 
+
 
 interface DashboardProps {
   toggleMenu: () => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ toggleMenu }) => {
-  // Mock data for the line charts
-  const totalCoinData = [40, 45, 42, 50, 55, 52, 60]; 
-  const activeUserData = [25, 23, 20, 18, 15, 12, 10]; 
-  const lineLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const [chartData, setChartData] = useState<number[]>([]);
+  const [totalMarketCap, setTotalMarketCap] = useState<number | null>(null);
+  const [isLoadingChart, setIsLoadingChart] = useState(true);
+  const [isLoadingSummary, setIsLoadingSummary] = useState(true);
 
-  // Mock data for the progressive chart
+  // Fetch Bitcoin chart data for the main graph
+  useEffect(() => {
+    const getChartData = async () => {
+      try {
+        const data = await fetchMarketChart('bitcoin', 7); // 7 days of Bitcoin data
+        const prices = data.map((item: [number, number]) => item[1]); // Extracting prices
+        setChartData(prices);
+        setIsLoadingChart(false);
+      } catch (err) {
+        console.error('Failed to fetch chart data:', err);
+        setIsLoadingChart(false);
+      }
+    };
+
+    getChartData();
+  }, []);
+
+  // Fetch global market cap for the main total balance card
+  useEffect(() => {
+    const getGlobalData = async () => {
+      try {
+        const data = await fetchGlobalData();
+        setTotalMarketCap(data.data.total_market_cap.usd);
+        setIsLoadingSummary(false);
+      } catch (err) {
+        console.error('Failed to fetch global data:', err);
+        setIsLoadingSummary(false);
+      }
+    };
+    getGlobalData();
+  }, []);
+
+  // Mock data for the progressive chart (as there's no direct API for it)
   const generateProgressiveData = (initialValue: number, count: number) => {
     let prev = initialValue;
     const data = [];
@@ -46,15 +82,40 @@ const Dashboard: React.FC<DashboardProps> = ({ toggleMenu }) => {
       
       <div className="dashboard-content">
         <div className="top-cards-row">
-          <SummaryCard title="Total Users" value="2,742" icon="👥" />
-          <SummaryCard title="Active Users Today" value="2,742" icon="📈" />
-          <SummaryCard title="Total Coin" value="8,679" icon="🪙" />
+          {isLoadingSummary ? (
+            <SummaryCard title="Total Users" value="Loading..." />
+          ) : (
+            <SummaryCard title="Total Users" value="2,742" icon="👥" /> // This data remains mock
+          )}
+          {isLoadingSummary ? (
+            <SummaryCard title="Active Users Today" value="Loading..." />
+          ) : (
+            <SummaryCard title="Active Users Today" value="2,742" icon="📈" /> // This data remains mock
+          )}
+          {isLoadingSummary ? (
+            <SummaryCard title="Total Market Cap" value="Loading..." />
+          ) : (
+            <SummaryCard title="Total Market Cap" value={`$${totalMarketCap?.toLocaleString()}`} icon="💰" />
+          )}
         </div>
 
         <div className="charts-container">
-          <CryptoChart title="$40,295.32" type="line" data={totalCoinData} labels={lineLabels} />
+          {isLoadingChart ? (
+            <div className="chart-card">Loading Chart...</div>
+          ) : (
+            <CryptoChart 
+              title={totalMarketCap ? `$${totalMarketCap.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : 'Loading...'} 
+              type="line" 
+              data={chartData} 
+              labels={chartData.map((_, i) => '')}
+            />
+          )}
           
-          <CryptoChart title="Active User Today" type="progressive" data={progressiveChartData} />
+          <CryptoChart 
+            title="Active User Today" 
+            type="progressive" 
+            data={progressiveChartData} 
+          />
         </div>
         
         <CoinListTable />
