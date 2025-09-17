@@ -1,8 +1,7 @@
-// src/services/globalService.ts
 import axios from 'axios';
 
-// Use the proxy path to avoid CORS errors
-const API_BASE_URL = '/api';
+// The full URL is used for production since the Vite proxy is for local development only
+const API_BASE_URL = 'https://api.coingecko.com/api/v3';
 
 export const fetchGlobalData = async () => {
   try {

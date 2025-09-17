@@ -70,8 +70,8 @@ html, body, #root {
   flex-direction: column;
   gap: 10px;
   padding: 20px;
-  border-top: 1px solid #303050; /* Add a line to separate it from the nav */
-  margin-top: 20px; /* Add some space from the bottom of the nav */
+  border-top: 1px solid #303050; 
+  margin-top: 20px; 
 }
 
 
