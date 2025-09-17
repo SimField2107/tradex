@@ -1,5 +1,5 @@
 // src/components/dashboard/WalletPage.tsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import WalletHeader from './WalletHeader';
 import AssetsList from './AssetsList';
 import { fetchCoinMarkets } from '../../services/cryptoService';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { fetchCoinMarkets } from '../../services/cryptoService';
 
 interface Coin {
