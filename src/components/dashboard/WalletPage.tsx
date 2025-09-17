@@ -1,10 +1,12 @@
 import React from 'react';
+import WalletHeader from './WalletHeader';
+import AssetsList from './AssetsList';
 
 const WalletPage = () => {
   return (
-    <div className="wallet-page">
-      <h1>My Wallet</h1>
-      <p>This is where the wallet view will go.</p>
+    <div className="wallet-page-container">
+      <WalletHeader totalBalance={10544.00} balanceChange={-545} />
+      <AssetsList />
     </div>
   );
 };

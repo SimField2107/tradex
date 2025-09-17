@@ -531,3 +531,129 @@ html, body, #root {
     }
   }
 }
+
+
+
+/* --- Wallet Page Styling --- */
+.wallet-page-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #1a1a2e;
+  min-height: 100vh;
+  color: white;
+}
+
+.wallet-header-card {
+  background-color: #2a2a4a;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px;
+}
+
+.wallet-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #a0a0c0;
+}
+
+.total-balance {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.total-balance span:first-child {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.balance-change {
+  font-size: 1rem;
+}
+
+.wallet-chart-container {
+  width: 100%;
+  height: 100px;
+}
+
+.positive {
+  color: #4CAF50;
+}
+
+.negative {
+  color: #ff6347;
+}
+
+.assets-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.assets-list-container h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #c0c0d0;
+  margin-bottom: 5px;
+}
+
+.asset-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2a2a4a;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.asset-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.asset-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #6c63ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.asset-details h3 {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.asset-details p {
+  font-size: 0.8rem;
+  color: #a0a0c0;
+}
+
+.asset-chart-wrapper {
+  width: 80px;
+  height: 40px;
+}
+
+.asset-value {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.usd-value {
+  font-size: 1rem;
+  font-weight: bold;
+}
