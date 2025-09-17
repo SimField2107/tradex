@@ -1,14 +1,14 @@
 import React from 'react';
-import './App.css'; // Make sure this is imported
+import './App.css'; // Make sure the stylesheet is imported
 import Sidebar from './components/dashboard/Sidebar';
+import Dashboard from './components/dashboard/Dashboard';
 
 function App() {
   return (
     <div className="app-container">
       <Sidebar />
       <main className="main-content">
-        {/* We will place a search bar and other top-level UI here later */}
-        {/* <Dashboard /> */}
+        <Dashboard />
       </main>
     </div>
   );
