@@ -8,7 +8,6 @@ import WalletPage from './components/dashboard/WalletPage';
 import LoginPage from './components/auth/LoginPage';
 import RegisterPage from './components/auth/RegisterPage';
 import { AuthProvider } from './context/AuthContext';
-import { useAuth } from './context/AuthContext';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,6 +34,7 @@ function App() {
         </div>
       </AuthProvider>
     </BrowserRouter>
+
   );
 }
 

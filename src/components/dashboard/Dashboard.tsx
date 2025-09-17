@@ -5,8 +5,7 @@ import SummaryCard from './SummaryCard';
 import CryptoChart from './CryptoChart';
 import CoinListTable from './CoinListTable';
 import { fetchMarketChart } from '../../services/cryptoService';
-import { fetchGlobalData } from '../../services/globalService'; 
-
+import { fetchGlobalData } from '../../services/globalService';
 
 interface DashboardProps {
   toggleMenu: () => void;
@@ -107,7 +106,7 @@ const Dashboard: React.FC<DashboardProps> = ({ toggleMenu }) => {
               title={totalMarketCap ? `$${totalMarketCap.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : 'Loading...'} 
               type="line" 
               data={chartData} 
-              labels={chartData.map((_, i) => '')}
+              labels={chartData.map(() => '')}
             />
           )}
           
