@@ -1,3 +1,4 @@
+// src/components/dashboard/AssetsList.tsx
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -29,12 +30,11 @@ interface Asset {
   sparkline: number[];
 }
 
-const MOCK_ASSETS: Asset[] = [
-  { name: 'Bitcoin', symbol: 'BTC', logo: 'B', valueUSD: 195.06, valueBTC: 0.003, priceChange: 2.5, sparkline: [10, 12, 11, 15, 14, 16] },
-  { name: 'Ethereum', symbol: 'ETH', logo: 'E', valueUSD: 514.02, valueBTC: 0.008, priceChange: -7.0, sparkline: [20, 18, 19, 17, 15, 12] },
-];
+interface AssetsListProps {
+  assets: Asset[];
+}
 
-const AssetsList = () => {
+const AssetsList: React.FC<AssetsListProps> = ({ assets }) => {
   const sparklineOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -46,7 +46,7 @@ const AssetsList = () => {
   return (
     <div className="assets-list-container">
       <h2>Assets</h2>
-      {MOCK_ASSETS.map(asset => (
+      {assets.map(asset => (
         <div key={asset.symbol} className="asset-card">
           <div className="asset-info">
             <div className="asset-logo">{asset.logo}</div>
