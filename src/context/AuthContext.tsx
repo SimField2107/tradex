@@ -1,5 +1,5 @@
 // src/context/AuthContext.tsx
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 
 // Define the shape of the context data
 interface AuthContextType {
@@ -13,10 +13,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Define the provider component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Use localStorage to persist the login state across sessions
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem('isLoggedIn') === 'true';
-  });
+  // Initialize state to false on the server
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Use useEffect to check localStorage only after the component mounts in the browser
+  useEffect(() => {
+    const storedStatus = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(storedStatus);
+  }, []);
 
   // Function to simulate a login
   const login = () => {
