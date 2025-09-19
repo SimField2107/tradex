@@ -1,7 +1,7 @@
-// src/components/dashboard/Sidebar.tsx
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface SidebarProps {
   isMenuOpen: boolean;
@@ -9,8 +9,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
-  const location = useLocation();
   const { isLoggedIn, logout } = useAuth();
+  const router = useRouter();
 
   const handleLogout = () => {
     logout();
@@ -33,14 +33,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
 
       <nav className="sidebar-nav">
         <ul>
-          <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`} onClick={toggleMenu}>
-            <Link to="/">
+          <li className={`nav-item ${router.pathname === '/' ? 'active' : ''}`} onClick={toggleMenu}>
+            <Link href="/">
               <span className="nav-icon">🏠</span>
               <span>Dashboard</span>
             </Link>
           </li>
-          <li className={`nav-item ${location.pathname === '/wallet' ? 'active' : ''}`} onClick={toggleMenu}>
-            <Link to="/wallet">
+          <li className={`nav-item ${router.pathname === '/wallet' ? 'active' : ''}`} onClick={toggleMenu}>
+            <Link href="/wallet">
               <span className="nav-icon">💰</span>
               <span>My Wallet</span>
             </Link>
@@ -76,24 +76,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
         </ul>
       </nav>
 
-      {/* This new block is placed before the footer */}
-      {!isLoggedIn && (
-        <div className="auth-links-container">
-          <Link to="/login" className="login-btn">
-            <span>Login</span>
-          </Link>
-          <Link to="/register" className="register-btn">
-            <span>Register</span>
-          </Link>
-        </div>
-      )}
-
       <div className="sidebar-footer">
-        {isLoggedIn && (
+        {isLoggedIn ? (
           <button className="logout-btn" onClick={handleLogout}>
             <span className="logout-icon">⬅️</span>
             <span>Logout</span>
           </button>
+        ) : (
+          <div className="auth-links">
+            <Link href="/login" className="login-btn">
+              <span>Login</span>
+            </Link>
+            <Link href="/register" className="register-btn">
+              <span>Register</span>
+            </Link>
+          </div>
         )}
       </div>
     </div>

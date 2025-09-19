@@ -1,4 +1,3 @@
-// src/components/dashboard/WalletPage.tsx
 import { useState, useEffect } from 'react';
 import WalletHeader from '../components/dashboard/WalletHeader';
 import AssetsList from '../components/dashboard/AssetsList';

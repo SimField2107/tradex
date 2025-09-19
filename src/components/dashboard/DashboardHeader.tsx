@@ -1,4 +1,3 @@
-// src/components/dashboard/DashboardHeader.tsx
 import React from 'react';
 
 interface DashboardHeaderProps {
