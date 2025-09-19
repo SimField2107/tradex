@@ -42,6 +42,12 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   border-right: 1px solid #303050;
+  height: 100vh;
+}
+
+.sidebar-nav {
+  margin-top: 20px; 
+  flex-grow: 1; 
 }
 
 .sidebar-header {
@@ -53,7 +59,6 @@ html, body, #root {
 
 .sidebar-footer {
   padding-top: 20px;
-  margin-top: auto;
   border-top: 1px solid #303050;
 }
 
