@@ -1,11 +1,1 @@
-{
-  "version": 4,
-  "routes": {},
-  "dynamicRoutes": {},
-  "notFoundRoutes": [],
-  "preview": {
-    "previewModeId": "9e4b71ad0ce511f903c83e81a7d7dac3",
-    "previewModeSigningKey": "7ba4f3beac4f9df555f1696b4e7aa476258baab2a8c5f934c967a135c604fdcd",
-    "previewModeEncryptionKey": "d9503645cd450cd0b8ea045f5cc80c1a0aca42c3a66b70197d573be64001bd06"
-  }
-}
+{"version":4,"routes":{"/coins/bitcoin":{},"/coins/ethereum":{},"/coins/tether":{}},"dynamicRoutes":{"/coins/[id]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/coins/[id]","routeRegex":"^\\/coins\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"163508e1bdb0785e9d720b075c9d2f53","previewModeSigningKey":"45e17077adb13c9f431dc32371913721f1c32ce11ce977c30df8bedcd7c12111","previewModeEncryptionKey":"47430c7e7d57f8f469344513e5280d7f5c7d9414dc2cb1d15989b2fce037c97b"}}
