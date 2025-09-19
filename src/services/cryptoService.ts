@@ -1,15 +1,54 @@
 import axios from 'axios';
 
-// The full URL is used for production since the Vite proxy is for local development only
-const API_BASE_URL = 'https://api.coingecko.com/api/v3';
+// Determine the base URL based on environment
+const getBaseURL = () => {
+  if (typeof window === 'undefined') {
+    // Server-side: use direct CoinGecko API
+    return 'https://api.coingecko.com/api/v3';
+  } else {
+    // Client-side: use Next.js proxy
+    return '/api';
+  }
+};
 
-/**
- * Fetches a list of coin markets with their market data.
- * @returns An array of coin market data.
- */
+// Create axios instance with default config
+const apiClient = axios.create({
+  baseURL: getBaseURL(),
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    'Accept': 'application/json',
+  },
+});
+
+// Add request interceptor for logging
+apiClient.interceptors.request.use(
+  (config) => {
+    console.log(`Making API request to: ${config.url}`);
+    return config;
+  },
+  (error) => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor for error handling
+apiClient.interceptors.response.use(
+  (response) => {
+    console.log(`API response received from: ${response.config.url}`);
+    return response;
+  },
+  (error) => {
+    console.error('Response error:', error.response?.status, error.message);
+    return Promise.reject(error);
+  }
+);
+
 export const fetchCoinMarkets = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/coins/markets`, {
+    const response = await apiClient.get('/coins/markets', {
       params: {
         vs_currency: 'usd',
         order: 'market_cap_desc',
@@ -21,27 +60,40 @@ export const fetchCoinMarkets = async () => {
     return response.data;
   } catch (error) {
     console.error('Error fetching coin markets:', error);
-    throw error;
+    // Return empty array as fallback
+    return [];
   }
 };
 
-/**
- * Fetches historical market data (prices) for a specific coin.
- * @param coinId The ID of the cryptocurrency (e.g., 'bitcoin').
- * @param days The number of days of historical data to fetch.
- * @returns An array of price data.
- */
 export const fetchMarketChart = async (coinId: string, days: number = 7) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/coins/${coinId}/market_chart`, {
+    const response = await apiClient.get(`/coins/${coinId}/market_chart`, {
       params: {
         vs_currency: 'usd',
         days: days,
       },
     });
-    return response.data.prices;
+    return response.data.prices || [];
   } catch (error) {
     console.error(`Error fetching market chart for ${coinId}:`, error);
-    throw error;
+    // Return empty array as fallback
+    return [];
+  }
+};
+
+export const fetchGlobalData = async () => {
+  try {
+    const response = await apiClient.get('/global');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching global data:', error);
+    // Return fallback data structure
+    return {
+      data: {
+        total_market_cap: {
+          usd: 0
+        }
+      }
+    };
   }
 };

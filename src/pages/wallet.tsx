@@ -3,10 +3,34 @@ import WalletHeader from '../components/dashboard/WalletHeader';
 import AssetsList from '../components/dashboard/AssetsList';
 import { fetchCoinMarkets } from '../services/cryptoService';
 
+interface Coin {
+  id: string;
+  name: string;
+  symbol: string;
+  image: string;
+  current_price: number;
+  price_change_percentage_24h: number;
+  market_cap: number;
+  total_volume: number;
+  price_change_24h: number;
+  sparkline_in_7d: {
+    price: number[];
+  };
+}
+
+interface Asset {
+  name: string;
+  symbol: string;
+  logo: string;
+  valueUSD: number;
+  priceChange: number;
+  sparkline: number[];
+}
+
 const WalletPage = () => {
   const [totalBalance, setTotalBalance] = useState<number | null>(null);
   const [balanceChange, setBalanceChange] = useState<number | null>(null);
-  const [assets, setAssets] = useState<any[]>([]);
+  const [assets, setAssets] = useState<Asset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -15,8 +39,8 @@ const WalletPage = () => {
         const coinData = await fetchCoinMarkets();
         
         // Filter for specific assets to simulate a user's portfolio
-        const btc = coinData.find((coin: any) => coin.symbol === 'btc');
-        const eth = coinData.find((coin: any) => coin.symbol === 'eth');
+        const btc = coinData.find((coin: Coin) => coin.symbol === 'btc');
+        const eth = coinData.find((coin: Coin) => coin.symbol === 'eth');
 
         if (btc && eth) {
           // Mock a portfolio with 0.1 BTC and 2 ETH

@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { fetchCoinMarkets } from '../../services/cryptoService';
+import React from 'react';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 interface Coin {
   id: string;
@@ -8,39 +9,52 @@ interface Coin {
   image: string;
   current_price: number;
   price_change_percentage_24h: number;
-  price_change_percentage_7d_in_currency: number;
   market_cap: number;
   total_volume: number;
 }
 
-const CoinListTable = () => {
-  const [coins, setCoins] = useState<Coin[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface CoinListProps {
+  coins: Coin[];
+}
 
-  useEffect(() => {
-    const getCoinData = async () => {
-      try {
-        // Fetch coin data with sparkline data for 7 days
-        const data: Coin[] = await fetchCoinMarkets();
-        setCoins(data);
-        setIsLoading(false);
-      } catch (err) {
-        console.error('Failed to fetch coin data:', err);
-        setError('Failed to fetch coin data. Please try again later.');
-        setIsLoading(false);
-      }
-    };
+const CoinListTable: React.FC<CoinListProps> = ({ coins }) => {
+  const router = useRouter();
 
-    getCoinData();
-  }, []);
+  const handleRowClick = (coinId: string) => {
+    router.push(`/coins/${coinId}`);
+  };
 
-  if (isLoading) {
-    return <div className="coin-list-card">Loading...</div>;
-  }
+  const formatPrice = (price: number) => {
+    if (price < 0.01) return `$${price.toFixed(6)}`;
+    if (price < 1) return `$${price.toFixed(4)}`;
+    return `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
 
-  if (error) {
-    return <div className="coin-list-card text-red">{error}</div>;
+  const formatMarketCap = (marketCap: number) => {
+    if (marketCap >= 1e12) return `$${(marketCap / 1e12).toFixed(2)}T`;
+    if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(2)}B`;
+    if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(2)}M`;
+    return `$${marketCap.toLocaleString()}`;
+  };
+
+  const formatVolume = (volume: number) => {
+    if (volume >= 1e12) return `$${(volume / 1e12).toFixed(2)}T`;
+    if (volume >= 1e9) return `$${(volume / 1e9).toFixed(2)}B`;
+    if (volume >= 1e6) return `$${(volume / 1e6).toFixed(2)}M`;
+    return `$${volume.toLocaleString()}`;
+  };
+
+  if (!coins || coins.length === 0) {
+    return (
+      <div className="coin-list-card">
+        <div className="coin-list-header">
+          <h2>Trending</h2>
+        </div>
+        <div className="text-center py-8 text-gray-500">
+          <p>Loading cryptocurrency data...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -63,21 +77,30 @@ const CoinListTable = () => {
         </thead>
         <tbody>
           {coins.slice(0, 10).map((coin, index) => (
-            <tr key={coin.id}>
+            <tr key={coin.id} onClick={() => handleRowClick(coin.id)} style={{ cursor: 'pointer' }}>
               <td>{index + 1}</td>
               <td>
                 <div className="coin-name-container">
-                  <img src={coin.image} alt={coin.symbol} className="coin-logo" />
+                  <Image 
+                    src={coin.image} 
+                    alt={coin.symbol} 
+                    width={24} 
+                    height={24}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/placeholder-coin.png';
+                    }}
+                  />
                   <span>{coin.name} ({coin.symbol.toUpperCase()})</span>
                 </div>
               </td>
-              <td>${coin.current_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td>{formatPrice(coin.current_price)}</td>
               <td className={coin.price_change_percentage_24h > 0 ? 'text-green' : 'text-red'}>
-                {coin.price_change_percentage_24h.toFixed(2)}%
+                {coin.price_change_percentage_24h ? coin.price_change_percentage_24h.toFixed(2) : '0.00'}%
               </td>
               <td>-</td>
-              <td>${(coin.market_cap / 1e9).toFixed(2)}B</td>
-              <td>${(coin.total_volume / 1e9).toFixed(2)}B</td>
+              <td>{formatMarketCap(coin.market_cap)}</td>
+              <td>{formatVolume(coin.total_volume)}</td>
               <td>-</td>
             </tr>
           ))}

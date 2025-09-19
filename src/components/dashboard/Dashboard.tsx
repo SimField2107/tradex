@@ -4,14 +4,25 @@ import SummaryCard from './SummaryCard';
 import CryptoChart from './CryptoChart';
 import CoinListTable from './CoinListTable';
 
+interface Coin {
+  id: string;
+  name: string;
+  symbol: string;
+  image: string;
+  current_price: number;
+  price_change_percentage_24h: number;
+  market_cap: number;
+  total_volume: number;
+}
+
 interface DashboardProps {
   toggleMenu?: () => void;
   totalMarketCap: number | null;
   chartData: number[];
+  coins: Coin[];
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ toggleMenu, totalMarketCap, chartData }) => {
-  // Mock data for the progressive chart (as there's no direct API for it)
+const Dashboard: React.FC<DashboardProps> = ({ toggleMenu, totalMarketCap, chartData, coins }) => {
   const generateProgressiveData = (initialValue: number, count: number) => {
     let prev = initialValue;
     const data = [];
@@ -37,9 +48,21 @@ const Dashboard: React.FC<DashboardProps> = ({ toggleMenu, totalMarketCap, chart
     }]
   };
 
+  // Format market cap value
+  const formatMarketCap = (value: number | null) => {
+    if (!value) return 'Loading...';
+    if (value >= 1e12) return `$${(value / 1e12).toFixed(2)}T`;
+    if (value >= 1e9) return `$${(value / 1e9).toFixed(2)}B`;
+    if (value >= 1e6) return `$${(value / 1e6).toFixed(2)}M`;
+    return `$${value.toLocaleString()}`;
+  };
+
+  // Check if we have valid data
+  const hasValidData = totalMarketCap !== null && chartData.length > 0 && coins.length > 0;
+
   return (
     <>
-      <DashboardHeader toggleMenu={toggleMenu} />
+      <DashboardHeader toggleMenu={toggleMenu || (() => {})} />
       
       <div className="dashboard-content">
         <div className="top-cards-row">
@@ -47,17 +70,17 @@ const Dashboard: React.FC<DashboardProps> = ({ toggleMenu, totalMarketCap, chart
           <SummaryCard title="Active Users Today" value="2,742" icon="📈" />
           <SummaryCard 
             title="Total Market Cap" 
-            value={totalMarketCap ? `$${totalMarketCap.toLocaleString()}` : 'Loading...'} 
+            value={formatMarketCap(totalMarketCap)} 
             icon="💰" 
           />
         </div>
 
         <div className="charts-container">
           <CryptoChart 
-            title={totalMarketCap ? `$${totalMarketCap.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : 'Loading...'} 
+            title={hasValidData ? formatMarketCap(totalMarketCap) : 'Loading Market Data...'} 
             type="line" 
             data={chartData} 
-            labels={chartData.map(() => '')}
+            labels={chartData.map((_, index) => `Day ${index + 1}`)} 
           />
           
           <CryptoChart 
@@ -67,7 +90,14 @@ const Dashboard: React.FC<DashboardProps> = ({ toggleMenu, totalMarketCap, chart
           />
         </div>
         
-        <CoinListTable />
+        <CoinListTable coins={coins} />
+        
+        {!hasValidData && (
+          <div className="text-center py-8 text-gray-500">
+            <p>Loading cryptocurrency data...</p>
+            <p className="text-sm mt-2">This may take a moment</p>
+          </div>
+        )}
       </div>
     </>
   );

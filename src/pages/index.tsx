@@ -1,48 +1,28 @@
 import React from 'react';
-import { GetServerSideProps } from 'next';
 import Layout from '../components/Layout';
 import Dashboard from '../components/dashboard/Dashboard';
-import { fetchGlobalData } from '../services/globalService';
-import { fetchMarketChart } from '../services/cryptoService';
+import { getServerSideProps } from '../lib/dashboardData';
+import type { Coin } from '../lib/dashboardData';
 
 interface HomePageProps {
-  totalMarketCap: number;
+  totalMarketCap: number | null;
   chartData: number[];
+  coins: Coin[];
+  error?: string;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ totalMarketCap, chartData }) => {
+const HomePage: React.FC<HomePageProps> = ({ totalMarketCap, chartData, coins, error }) => {
+  if (error) {
+    console.error('Dashboard error:', error);
+  }
+
   return (
     <Layout>
-      <Dashboard totalMarketCap={totalMarketCap} chartData={chartData} />
+      <Dashboard totalMarketCap={totalMarketCap} chartData={chartData} coins={coins} />
     </Layout>
   );
 };
 
 export default HomePage;
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const [globalData, chartPrices] = await Promise.all([
-      fetchGlobalData(),
-      fetchMarketChart('bitcoin', 7)
-    ]);
-
-    const totalMarketCap = globalData.data.total_market_cap.usd;
-    const chartData = chartPrices.map((item: [number, number]) => item[1]);
-
-    return {
-      props: {
-        totalMarketCap,
-        chartData
-      },
-    };
-  } catch (error) {
-    console.error('Data fetching failed:', error);
-    return {
-      props: {
-        totalMarketCap: null,
-        chartData: []
-      },
-    };
-  }
-};
+export { getServerSideProps };

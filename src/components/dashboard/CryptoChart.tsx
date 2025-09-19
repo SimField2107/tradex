@@ -21,10 +21,43 @@ ChartJS.register(
   ArcElement
 );
 
+interface ChartData {
+  datasets: Array<{
+    data: number[] | Array<{x: number, y: number}>;
+    borderColor?: string;
+    backgroundColor?: string | ((context: ChartContext) => string);
+    fill?: boolean;
+    tension?: number;
+    pointRadius?: number;
+  }>;
+  labels?: string[];
+}
+
+interface ChartContext {
+  chart: {
+    ctx: CanvasRenderingContext2D;
+    scales: {
+      y: {
+        getPixelForValue: (value: number) => number;
+      };
+    };
+    getDatasetMeta: (datasetIndex: number) => {
+      data: Array<{
+        getProps: (props: string[], mode: boolean) => { y: number };
+      }>;
+    };
+  };
+  index: number;
+  datasetIndex: number;
+  type: string;
+  xStarted?: boolean;
+  yStarted?: boolean;
+}
+
 interface CryptoChartProps {
   title: string;
   type: 'line' | 'doughnut' | 'progressive';
-  data: any;
+  data: number[] | ChartData;
   labels?: string[];
 }
 
@@ -46,7 +79,7 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ title, type, data, labels }) 
             fill: true,
             data,
             borderColor: isPositive ? 'rgba(76, 175, 80, 1)' : 'rgba(255, 99, 132, 1)',
-            backgroundColor: (context: any) => {
+            backgroundColor: (context: ChartContext) => {
               const ctx = context.chart.ctx;
               const gradient = ctx.createLinearGradient(0, 0, 0, 200);
               if (isPositive) {
@@ -102,33 +135,34 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ title, type, data, labels }) 
       };
       break;
 
-    case 'progressive':
+    case 'progressive': {
       ChartComponent = Line;
       
       const totalDuration = 10000;
-      const dataLength = data.datasets && data.datasets[0] ? data.datasets[0].data.length : 1;
+      const chartDataTyped = data as ChartData;
+      const dataLength = chartDataTyped.datasets && chartDataTyped.datasets[0] ? chartDataTyped.datasets[0].data.length : 1;
       const delayBetweenPoints = totalDuration / dataLength;
       
-      const previousY = (ctx: any) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+      const previousY = (ctx: ChartContext) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
       
       const animation = {
         x: {
-          type: 'number',
-          easing: 'linear',
+          type: 'number' as const,
+          easing: 'linear' as const,
           duration: delayBetweenPoints,
           from: NaN,
-          delay(ctx: any) {
+          delay(ctx: ChartContext) {
             if (ctx.type !== 'data' || ctx.xStarted) { return 0; }
             ctx.xStarted = true;
             return ctx.index * delayBetweenPoints;
           }
         },
         y: {
-          type: 'number',
-          easing: 'linear',
+          type: 'number' as const,
+          easing: 'linear' as const,
           duration: delayBetweenPoints,
           from: previousY,
-          delay(ctx: any) {
+          delay(ctx: ChartContext) {
             if (ctx.type !== 'data' || ctx.yStarted) { return 0; }
             ctx.yStarted = true;
             return ctx.index * delayBetweenPoints;
@@ -155,6 +189,7 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ title, type, data, labels }) 
         elements: { line: { borderWidth: 2, tension: 0.4 } },
       };
       break;
+    }
 
     default:
       return null;
@@ -164,7 +199,7 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ title, type, data, labels }) 
     <div className="chart-card">
       <div className="chart-title">{title}</div>
       <div className="chart-wrapper">
-        <ChartComponent data={chartData} options={options as any} />
+        <ChartComponent data={chartData} options={options} />
       </div>
     </div>
   );
