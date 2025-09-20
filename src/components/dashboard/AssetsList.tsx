@@ -1,30 +1,13 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Filler,
-} from 'chart.js';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Filler
-);
+import Image from 'next/image';
+import { format } from 'date-fns';
+import clsx from 'clsx';
 
 interface Asset {
   name: string;
   symbol: string;
   logo: string;
   valueUSD: number;
-  valueBTC?: number;
   priceChange: number;
   sparkline: number[];
 }
@@ -34,47 +17,47 @@ interface AssetsListProps {
 }
 
 const AssetsList: React.FC<AssetsListProps> = ({ assets }) => {
-  const sparklineOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { tooltip: { enabled: false }, legend: { display: false } },
-    scales: { x: { display: false }, y: { display: false } },
-    elements: { point: { radius: 0 }, line: { borderWidth: 2 } }
-  };
-
   return (
     <div className="assets-list-container">
-      <h2>Assets</h2>
-      {assets.map(asset => (
-        <div key={asset.symbol} className="asset-card">
-          <div className="asset-info">
-            <div className="asset-logo">{asset.logo}</div>
-            <div className="asset-details">
-              <h3>{asset.name}</h3>
-              <p>{asset.symbol}</p>
-            </div>
-          </div>
-          <div className="asset-chart-wrapper">
-            <Line
-              data={{
-                labels: Array(asset.sparkline.length).fill(''),
-                datasets: [{
-                  data: asset.sparkline,
-                  borderColor: asset.priceChange > 0 ? 'rgba(76, 175, 80, 1)' : 'rgba(255, 99, 132, 1)',
-                  tension: 0.4,
-                }],
-              }}
-              options={sparklineOptions}
-            />
-          </div>
-          <div className="asset-value">
-            <span className="usd-value">${asset.valueUSD.toFixed(2)}</span>
-            <span className={`price-change ${asset.priceChange > 0 ? 'positive' : 'negative'}`}>{asset.priceChange > 0 ? '+' : ''}{asset.priceChange.toFixed(2)}%</span>
-          </div>
-        </div>
-      ))}
+      <h2 className="text-xl font-bold mb-4">Your Assets</h2>
+      {/* THIS IS THE TEST: We are using an inline style attribute */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> 
+        {assets.map((asset) => (
+          <AssetRow key={asset.symbol} asset={asset} />
+        ))}
+      </div>
     </div>
   );
 };
+
+const AssetRow: React.FC<{ asset: Asset }> = ({ asset }) => {
+  // ... the rest of the AssetRow component remains exactly the same
+  const isPositive = asset.priceChange >= 0;
+
+  return (
+    <div className="asset-card">
+      <div className="asset-info">
+        <Image 
+          src={asset.logo} 
+          alt={`${asset.name} logo`}
+          width={40}
+          height={40}
+          className="rounded-full"
+        />
+        <div className="asset-details">
+          <h3 className="font-bold text-white">{asset.name}</h3>
+          <p className="text-sm text-gray-400">{asset.symbol.toUpperCase()}</p>
+        </div>
+      </div>
+      <div className="asset-chart-wrapper hidden md:block"></div>
+      <div className="asset-value text-right">
+        <p className="font-bold text-white">${asset.valueUSD.toLocaleString()}</p>
+        <p className={clsx('text-sm', { 'text-green-400': isPositive, 'text-red-400': !isPositive })}>
+          {isPositive ? '+' : ''}{asset.priceChange.toFixed(2)}%
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default AssetsList;
