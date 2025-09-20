@@ -1,8 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = { // 1. Switched to module.exports
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    // 2. Updated paths to be specific to a Next.js project
+    "./src/pages/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
