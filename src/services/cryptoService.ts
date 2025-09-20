@@ -11,7 +11,7 @@ const getBaseURL = () => {
   }
 };
 
-// Create axios instance with default config
+// Create axios instance without the default params
 const apiClient = axios.create({
   baseURL: getBaseURL(),
   timeout: 10000,
@@ -22,9 +22,14 @@ const apiClient = axios.create({
   },
 });
 
-// Add request interceptor for logging
+// MODIFIED: Use the request interceptor to add the API key
 apiClient.interceptors.request.use(
   (config) => {
+    // Ensure params object exists
+    config.params = config.params || {};
+    // Add the API key to every request's parameters
+    config.params['x_cg_demo_api_key'] = process.env.COINGECKO_API_KEY;
+    
     console.log(`Making API request to: ${config.url}`);
     return config;
   },
@@ -45,6 +50,8 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// --- The rest of your functions remain exactly the same ---
 
 export const fetchCoinMarkets = async () => {
   try {

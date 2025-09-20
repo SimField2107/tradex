@@ -1,20 +1,20 @@
-
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router'; 
+import Link from 'next/link';
 import { useAuth } from '../hooks/useAuth';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const router = useRouter(); 
   const { login } = useAuth();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (email === 'test@example.com' && password === 'password123') {
       login(); // Call the login function from context
-      navigate('/'); // Redirect to the dashboard
+      router.push('/'); 
     } else {
       setError('Invalid credentials.');
     }
@@ -49,7 +49,11 @@ const LoginPage = () => {
           <button type="submit" className="auth-btn">Log In</button>
         </form>
         <p className="auth-link">
-          Don't have an account? <a href="/register">Register here</a>
+          Don't have an account?{' '}
+          {/* 5. Replaced <a> with <Link> */}
+          <Link href="/register">
+            Register here
+          </Link>
         </p>
       </div>
     </div>

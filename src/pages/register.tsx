@@ -1,18 +1,18 @@
-
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router'; 
+import Link from 'next/link'; 
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const router = useRouter(); 
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     // Simulate a successful registration
     console.log('Registered with:', username, email, password);
-    navigate('/login');
+    router.push('/login'); 
   };
 
   return (
@@ -53,7 +53,11 @@ const RegisterPage = () => {
           <button type="submit" className="auth-btn">Register</button>
         </form>
         <p className="auth-link">
-          Already have an account? <a href="/login">Log in here</a>
+          Already have an account?{' '}
+          {/* 5. Replaced <a> with <Link> */}
+          <Link href="/login">
+            Log in here
+          </Link>
         </p>
       </div>
     </div>
