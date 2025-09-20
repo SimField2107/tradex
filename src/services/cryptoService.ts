@@ -63,7 +63,7 @@ export const fetchCoinMarkets = async () => {
         order: 'market_cap_desc',
         per_page: 100,
         page: 1,
-        sparkline: false,
+        sparkline: true,
       },
     });
     return response.data;
