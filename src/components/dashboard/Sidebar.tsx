@@ -1,12 +1,21 @@
 import React from 'react';
-import { useAuth } from '../../hooks/useAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useAuth } from '../../hooks/useAuth';
+import { LayoutDashboard, Wallet, ArrowRightLeft, Settings, Search, LogOut } from 'lucide-react';
 
 interface SidebarProps {
   isMenuOpen: boolean;
   toggleMenu: () => void;
 }
+
+// We define our navigation links as an array of objects for easier mapping.
+const navLinks = [
+  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/portfolio', label: 'Portfolio', icon: Wallet },
+  { href: '/transactions', label: 'Transactions', icon: ArrowRightLeft },
+  { href: '/settings', label: 'Settings', icon: Settings },
+];
 
 const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
   const { isLoggedIn, logout } = useAuth();
@@ -14,7 +23,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
 
   const handleLogout = () => {
     logout();
-    toggleMenu();
+    // No need to toggle menu on desktop, but essential for mobile
+    if (isMenuOpen) {
+      toggleMenu();
+    }
+  };
+
+  const handleLinkClick = () => {
+    if (isMenuOpen) {
+      toggleMenu();
+    }
   };
 
   return (
@@ -28,66 +46,41 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
 
       <div className="search-bar">
         <input type="text" placeholder="Search here" />
-        <span className="search-icon">🔍</span>
+        <Search className="search-icon" size={18} />
       </div>
 
       <nav className="sidebar-nav">
         <ul>
-          <li className={`nav-item ${router.pathname === '/' ? 'active' : ''}`} onClick={toggleMenu}>
-            <Link href="/">
-              <span className="nav-icon">🏠</span>
-              <span>Dashboard</span>
-            </Link>
-          </li>
-          <li className={`nav-item ${router.pathname === '/wallet' ? 'active' : ''}`} onClick={toggleMenu}>
-            <Link href="/wallet">
-              <span className="nav-icon">💰</span>
-              <span>My Wallet</span>
-            </Link>
-          </li>
-          <li className="nav-item" onClick={toggleMenu}>
-            <span className="nav-icon">🖼️</span>
-            <span>Logo and Banner</span>
-          </li>
-          <li className="nav-item" onClick={toggleMenu}>
-            <span className="nav-icon">📝</span>
-            <span>Content</span>
-          </li>
-          <li className="nav-item" onClick={toggleMenu}>
-            <span className="nav-icon">👥</span>
-            <span>Users</span>
-          </li>
-          <li className="nav-item" onClick={toggleMenu}>
-            <span className="nav-icon">📜</span>
-            <span>Reward Logs</span>
-          </li>
-          <li className="nav-item" onClick={toggleMenu}>
-            <span className="nav-icon">🔧</span>
-            <span>Maintenance</span>
-          </li>
-          <li className="nav-item" onClick={toggleMenu}>
-            <span className="nav-icon">👑</span>
-            <span>Admin</span>
-          </li>
-          <li className="nav-item" onClick={toggleMenu}>
-            <span className="nav-icon">⚙️</span>
-            <span>Setting</span>
-          </li>
+          {navLinks.map((link) => {
+            // Check if the current path matches the link's href.
+            // For the dashboard, we want an exact match. For others, we can be more lenient.
+            const isActive = router.pathname === link.href;
+            const Icon = link.icon;
+
+            return (
+              <li key={link.href} onClick={handleLinkClick}>
+                <Link href={link.href} className={`nav-item ${isActive ? 'active' : ''}`}>
+                    <Icon className="nav-icon" size={20} />
+                    <span>{link.label}</span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
       <div className="sidebar-footer">
         {isLoggedIn ? (
           <button className="logout-btn" onClick={handleLogout}>
-            <span className="logout-icon">⬅️</span>
+            <LogOut className="logout-icon" size={18} />
             <span>Logout</span>
           </button>
         ) : (
           <div className="auth-links">
-            <Link href="/login" className="login-btn">
+            <Link href="/login" className="login-btn" onClick={handleLinkClick}>
               <span>Login</span>
             </Link>
-            <Link href="/register" className="register-btn">
+            <Link href="/register" className="register-btn" onClick={handleLinkClick}>
               <span>Register</span>
             </Link>
           </div>
