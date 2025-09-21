@@ -182,6 +182,9 @@ html, body, #root {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex; 
+  flex-direction: column;
+  gap: 15px; 
 }
 
 .nav-item {
@@ -190,20 +193,26 @@ html, body, #root {
   padding: 12px 15px;
   cursor: pointer;
   border-radius: 8px;
-  margin-bottom: 5px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background: linear-gradient(90deg, #4f46e5, #6366f1); 
+  color: white; 
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
 }
 
 .nav-item:hover {
-  background-color: #303050;
+  background: linear-gradient(90deg, #6366f1, #7f86f8); 
   color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .nav-item.active {
-  background: linear-gradient(90deg, #6c63ff, #8a2be2);
+  background: linear-gradient(90deg, #6c63ff, #8a2be2); 
   color: white;
-  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4); 
 }
+
+
 
 .nav-icon {
   margin-right: 15px;
