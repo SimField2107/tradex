@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-
-
 // Determine the base URL based on environment
 const getBaseURL = () => {
   if (typeof window === 'undefined') {
@@ -13,7 +11,7 @@ const getBaseURL = () => {
   }
 };
 
-// Create axios instance without the default params
+// Create axios instance
 const apiClient = axios.create({
   baseURL: getBaseURL(),
   timeout: 10000,
@@ -24,14 +22,11 @@ const apiClient = axios.create({
   },
 });
 
-// MODIFIED: Use the request interceptor to add the API key
+// Use the request interceptor to add the API key
 apiClient.interceptors.request.use(
   (config) => {
-    // Ensure params object exists
     config.params = config.params || {};
-    // Add the API key to every request's parameters
     config.params['x_cg_demo_api_key'] = process.env.COINGECKO_API_KEY;
-    
     console.log(`Making API request to: ${config.url}`);
     return config;
   },
@@ -53,7 +48,7 @@ apiClient.interceptors.response.use(
   }
 );
 
-// --- The rest of your functions remain exactly the same ---
+// --- Your API functions ---
 
 export const fetchCoinMarkets = async () => {
   try {
@@ -69,7 +64,6 @@ export const fetchCoinMarkets = async () => {
     return response.data;
   } catch (error) {
     console.error('Error fetching coin markets:', error);
-    // Return empty array as fallback
     return [];
   }
 };
@@ -85,7 +79,6 @@ export const fetchMarketChart = async (coinId: string, days: number = 7) => {
     return response.data.prices || [];
   } catch (error) {
     console.error(`Error fetching market chart for ${coinId}:`, error);
-    // Return empty array as fallback
     return [];
   }
 };
@@ -96,7 +89,6 @@ export const fetchGlobalData = async () => {
     return response.data;
   } catch (error) {
     console.error('Error fetching global data:', error);
-    // Return fallback data structure
     return {
       data: {
         total_market_cap: {
@@ -104,5 +96,46 @@ export const fetchGlobalData = async () => {
         }
       }
     };
+  }
+};
+
+export const fetchCoinOHLC = async (coinId: string, days: number = 7) => {
+  try {
+    const response = await apiClient.get(`/coins/${coinId}/ohlc`, {
+      params: {
+        vs_currency: 'usd',
+        days: days,
+      },
+    });
+    return response.data.map((d: [number, number, number, number, number]) => ({
+      time: d[0] / 1000,
+      open: d[1],
+      high: d[2],
+      low: d[3],
+      close: d[4],
+    }));
+  } catch (error) {
+    console.error(`Error fetching OHLC data for ${coinId}:`, error);
+    return [];
+  }
+};
+
+// --- NEW EFFICIENT FUNCTION ADDED HERE ---
+export const fetchCoinDetails = async (coinId: string) => {
+  try {
+    const response = await apiClient.get(`/coins/${coinId}`, {
+      params: {
+        localization: 'false',
+        tickers: 'false',
+        market_data: 'true',
+        community_data: 'false',
+        developer_data: 'false',
+        sparkline: 'false',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching details for ${coinId}:`, error);
+    return null;
   }
 };

@@ -1,52 +1,54 @@
-import { fetchCoinMarkets, fetchMarketChart } from '../services/cryptoService';
+import { fetchCoinDetails, fetchCoinOHLC, fetchCoinMarkets } from '../services/cryptoService';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 
-export interface Coin {
-  id: string;
-  name: string;
-  symbol: string;
-  image: string;
-  current_price: number;
-  price_change_percentage_24h: number;
-  market_cap: number;
-  total_volume: number;
-  description?: {
-    en: string;
-  };
+// Define the shape of the OHLC data
+export interface OHLC {
+  time: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
 }
 
-export const getStaticPaths = async () => {
-  const paths = [
-    { params: { id: 'bitcoin' } },
-    { params: { id: 'ethereum' } },
-    { params: { id: 'tether' } },
-  ];
+// Update the props to include the new data
+export interface CoinPageProps {
+  coin: any; // Using 'any' for now as the full coin detail object is very large
+  ohlcData: OHLC[];
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  // For a real app, you'd fetch the top 10-20 coins here instead of hardcoding
+  const topCoins = await fetchCoinMarkets();
+  const paths = topCoins.slice(0, 10).map((coin: { id: string }) => ({
+    params: { id: coin.id },
+  }));
+
   return { paths, fallback: 'blocking' };
 };
 
-export const getStaticProps = async ({ params }: { params: { id: string } }) => {
-  const coinId = params?.id as string;
+export const getStaticProps: GetStaticProps<CoinPageProps, { id: string }> = async (context) => {
+  const coinId = context.params?.id as string;
+  
   try {
-    const [coinData, chartPrices] = await Promise.all([
-      fetchCoinMarkets(),
-      fetchMarketChart(coinId, 30) // Fetching 30 days of data for the chart
+    // Fetch both the coin details and the OHLC data at the same time
+    const [coin, ohlcData] = await Promise.all([
+      fetchCoinDetails(coinId),
+      fetchCoinOHLC(coinId, 30) // Fetching 30 days of OHLC data
     ]);
 
-    const coin = coinData.find((c: Coin) => c.id === coinId);
-    const chartData = chartPrices.map((item: [number, number]) => item[1]);
-
-    if (!coin) {
-      return { notFound: true };
+    if (!coin || !ohlcData) {
+      return { notFound: true }; // If either API call fails, show a 404
     }
 
     return {
       props: {
         coin,
-        chartData,
+        ohlcData,
       },
-      revalidate: 60, // Revalidate every minute
+      revalidate: 60, // Revalidate the data every 60 seconds
     };
   } catch (error) {
-    console.error('Error fetching coin data:', error);
+    console.error(`Error fetching data for ${coinId}:`, error);
     return { notFound: true };
   }
 };
