@@ -1,5 +1,5 @@
 import React from 'react';
-import DashboardHeader from './DashboardHeader';
+// import DashboardHeader from './DashboardHeader'; // This import is no longer needed
 import SummaryCard from './SummaryCard';
 import CryptoChart from './CryptoChart';
 import CoinListTable from './CoinListTable';
@@ -22,6 +22,7 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ totalMarketCap, chartData, coins }) => {
+  // ... (all your helper functions like generateProgressiveData and formatMarketCap remain the same)
   const generateProgressiveData = (initialValue: number, count: number) => {
     let prev = initialValue;
     const data = [];
@@ -57,47 +58,44 @@ const Dashboard: React.FC<DashboardProps> = ({ totalMarketCap, chartData, coins 
 
   const hasValidData = totalMarketCap !== null && chartData.length > 0 && coins.length > 0;
 
-  return (
-    <>
-    
-      <DashboardHeader />
-      
-      <div className="dashboard-content">
-        <div className="top-cards-row">
-          <SummaryCard title="Total Users" value="2,742" icon="👥" />
-          <SummaryCard title="Active Users Today" value="2,742" icon="📈" />
-          <SummaryCard 
-            title="Total Market Cap" 
-            value={formatMarketCap(totalMarketCap)} 
-            icon="💰" 
-          />
-        </div>
 
-        <div className="charts-container">
-          <CryptoChart 
-            title={hasValidData ? formatMarketCap(totalMarketCap) : 'Loading Market Data...'} 
-            type="line" 
-            data={chartData} 
-            labels={chartData.map((_, index) => `Day ${index + 1}`)} 
-          />
-          
-          <CryptoChart 
-            title="Active User Today" 
-            type="progressive" 
-            data={progressiveChartData} 
-          />
-        </div>
-        
-        <CoinListTable coins={coins} />
-        
-        {!hasValidData && (
-          <div className="text-center py-8 text-gray-500">
-            <p>Loading cryptocurrency data...</p>
-            <p className="text-sm mt-2">This may take a moment</p>
-          </div>
-        )}
+  return (
+    // We remove the <DashboardHeader /> component from here, as it's now handled by the main Layout
+    <div className="dashboard-content">
+      <div className="top-cards-row">
+        <SummaryCard title="Total Users" value="2,742" icon="👥" />
+        <SummaryCard title="Active Users Today" value="2,742" icon="📈" />
+        <SummaryCard 
+          title="Total Market Cap" 
+          value={formatMarketCap(totalMarketCap)} 
+          icon="💰" 
+        />
       </div>
-    </>
+
+      <div className="charts-container">
+        <CryptoChart 
+          title={hasValidData ? formatMarketCap(totalMarketCap) : 'Loading Market Data...'} 
+          type="line" 
+          data={chartData} 
+          labels={chartData.map((_, index) => `Day ${index + 1}`)} 
+        />
+        
+        <CryptoChart 
+          title="Active User Today" 
+          type="progressive" 
+          data={progressiveChartData} 
+        />
+      </div>
+      
+      <CoinListTable coins={coins} />
+      
+      {!hasValidData && (
+        <div className="text-center py-8 text-gray-500">
+          <p>Loading cryptocurrency data...</p>
+          <p className="text-sm mt-2">This may take a moment</p>
+        </div>
+      )}
+    </div>
   );
 };
 
