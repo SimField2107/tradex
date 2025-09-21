@@ -32,7 +32,7 @@ export interface CoinPageProps {
 export const getStaticPaths: GetStaticPaths = async () => {
   const topCoins = await fetchCoinMarkets();
   
-  const paths = topCoins.slice(0, 20).map((coin: { id: string }) => ({
+  const paths = topCoins.slice(0, 5).map((coin: { id: string }) => ({
     params: { id: coin.id },
   }));
 
