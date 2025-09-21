@@ -29,10 +29,12 @@ const formatLargeNumber = (num: number) => {
   return `$${num.toLocaleString()}`;
 };
 
+// A helper component for the sortable table headers
 const SortableHeader: React.FC<{
   label: string;
-  sortKey: string;
-  currentSortKey: string;
+  // THIS IS THE FIX: Made the types for the sort keys more specific
+  sortKey: keyof Coin | 'rank';
+  currentSortKey: keyof Coin | 'rank';
   direction: 'asc' | 'desc';
   onSort: (key: keyof Coin | 'rank') => void;
   className?: string;
@@ -49,6 +51,7 @@ const SortableHeader: React.FC<{
     </th>
   );
 };
+
 
 const MarketTable: React.FC<MarketTableProps> = ({ coins, sortKey, sortDirection, onSort }) => {
   const router = useRouter();
