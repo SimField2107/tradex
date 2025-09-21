@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import clsx from 'clsx';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 
 interface Coin {
