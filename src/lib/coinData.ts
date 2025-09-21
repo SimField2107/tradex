@@ -32,7 +32,7 @@ export interface CoinPageProps {
 export const getStaticPaths: GetStaticPaths = async () => {
   const topCoins = await fetchCoinMarkets();
   
-  const paths = topCoins.slice(0, 50).map((coin: { id: string }) => ({
+  const paths = topCoins.slice(0, 20).map((coin: { id: string }) => ({
     params: { id: coin.id },
   }));
 
@@ -57,7 +57,7 @@ export const getStaticProps: GetStaticProps<CoinPageProps, { id: string }> = asy
         coin,
         ohlcData,
       },
-      revalidate: 60, // Revalidate every 60 seconds
+      revalidate: 60,
     };
   } catch (error) {
     console.error(`Error fetching data for ${coinId}:`, error);
