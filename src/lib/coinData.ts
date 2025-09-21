@@ -1,7 +1,6 @@
 import { fetchCoinDetails, fetchCoinOHLC, fetchCoinMarkets } from '../services/cryptoService';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
-// Define the shape of the OHLC data
 export interface OHLC {
   time: number;
   open: number;
@@ -10,14 +9,27 @@ export interface OHLC {
   close: number;
 }
 
-// Update the props to include the new data
+interface CoinDetails {
+  name: string;
+  symbol: string;
+  image: { large: string };
+  description: { en: string };
+  market_data: {
+    current_price: { usd: number };
+    price_change_percentage_24h: number;
+    market_cap: { usd: number };
+    total_volume: { usd: number };
+    circulating_supply: number;
+    ath: { usd: number };
+  };
+}
+
 export interface CoinPageProps {
-  coin: any; // Using 'any' for now as the full coin detail object is very large
+  coin: CoinDetails;
   ohlcData: OHLC[];
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // For a real app, you'd fetch the top 10-20 coins here instead of hardcoding
   const topCoins = await fetchCoinMarkets();
   const paths = topCoins.slice(0, 10).map((coin: { id: string }) => ({
     params: { id: coin.id },
@@ -30,14 +42,13 @@ export const getStaticProps: GetStaticProps<CoinPageProps, { id: string }> = asy
   const coinId = context.params?.id as string;
   
   try {
-    // Fetch both the coin details and the OHLC data at the same time
     const [coin, ohlcData] = await Promise.all([
       fetchCoinDetails(coinId),
-      fetchCoinOHLC(coinId, 30) // Fetching 30 days of OHLC data
+      fetchCoinOHLC(coinId, 30)
     ]);
 
     if (!coin || !ohlcData) {
-      return { notFound: true }; // If either API call fails, show a 404
+      return { notFound: true };
     }
 
     return {
@@ -45,7 +56,7 @@ export const getStaticProps: GetStaticProps<CoinPageProps, { id: string }> = asy
         coin,
         ohlcData,
       },
-      revalidate: 60, // Revalidate the data every 60 seconds
+      revalidate: 60,
     };
   } catch (error) {
     console.error(`Error fetching data for ${coinId}:`, error);

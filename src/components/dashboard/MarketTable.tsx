@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import clsx from 'clsx';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 
 interface Coin {
@@ -34,11 +35,10 @@ const SortableHeader: React.FC<{
   sortKey: string;
   currentSortKey: string;
   direction: 'asc' | 'desc';
-  onSort: (key: any) => void;
+  onSort: (key: keyof Coin | 'rank') => void;
   className?: string;
 }> = ({ label, sortKey, currentSortKey, direction, onSort, className }) => {
   const isActive = sortKey === currentSortKey;
-  // We construct the className string manually here
   const buttonClassName = `market-header-button ${isActive ? 'market-header-button--active' : ''}`;
   
   return (

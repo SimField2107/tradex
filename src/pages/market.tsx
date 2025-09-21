@@ -20,7 +20,7 @@ const MarketPage = ({ coins }: InferGetStaticPropsType<typeof getStaticProps>) =
   const { searchTerm, setSearchTerm, sortKey, sortDirection, setSort } = useMarketStore();
 
   const processedCoins = useMemo(() => {
-    let filtered = coins.filter(
+    const filtered = coins.filter(
       (coin) =>
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
@@ -48,7 +48,6 @@ const MarketPage = ({ coins }: InferGetStaticPropsType<typeof getStaticProps>) =
         <h1 className="header-title">Market Explorer</h1>
       </div>
       
-      {/* The only change is adding an inline style here */}
       <div style={{ marginBottom: '1.5rem' }}>
         <input
           type="text"
