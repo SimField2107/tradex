@@ -1,5 +1,5 @@
 import React from 'react';
-// import DashboardHeader from './DashboardHeader'; // This import is no longer needed
+// import DashboardHeader from './DashboardHeader'; 
 import SummaryCard from './SummaryCard';
 import CryptoChart from './CryptoChart';
 import CoinListTable from './CoinListTable';
