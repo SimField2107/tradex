@@ -16,7 +16,8 @@ interface Coin {
 
 interface MarketTableProps {
   coins: Coin[];
-  sortKey: string;
+  // THIS IS THE FIX: Made the type for sortKey more specific
+  sortKey: keyof Coin | 'rank';
   sortDirection: 'asc' | 'desc';
   onSort: (key: keyof Coin | 'rank') => void;
 }
@@ -29,10 +30,8 @@ const formatLargeNumber = (num: number) => {
   return `$${num.toLocaleString()}`;
 };
 
-// A helper component for the sortable table headers
 const SortableHeader: React.FC<{
   label: string;
-  // THIS IS THE FIX: Made the types for the sort keys more specific
   sortKey: keyof Coin | 'rank';
   currentSortKey: keyof Coin | 'rank';
   direction: 'asc' | 'desc';
