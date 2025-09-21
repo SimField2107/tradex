@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-import { format } from 'date-fns';
 import clsx from 'clsx';
 
 interface Asset {
