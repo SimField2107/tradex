@@ -16,13 +16,12 @@ interface Coin {
 }
 
 interface DashboardProps {
-  toggleMenu?: () => void;
   totalMarketCap: number | null;
   chartData: number[];
   coins: Coin[];
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ toggleMenu, totalMarketCap, chartData, coins }) => {
+const Dashboard: React.FC<DashboardProps> = ({ totalMarketCap, chartData, coins }) => {
   const generateProgressiveData = (initialValue: number, count: number) => {
     let prev = initialValue;
     const data = [];
@@ -48,7 +47,6 @@ const Dashboard: React.FC<DashboardProps> = ({ toggleMenu, totalMarketCap, chart
     }]
   };
 
-  // Format market cap value
   const formatMarketCap = (value: number | null) => {
     if (!value) return 'Loading...';
     if (value >= 1e12) return `$${(value / 1e12).toFixed(2)}T`;
@@ -57,12 +55,12 @@ const Dashboard: React.FC<DashboardProps> = ({ toggleMenu, totalMarketCap, chart
     return `$${value.toLocaleString()}`;
   };
 
-  // Check if we have valid data
   const hasValidData = totalMarketCap !== null && chartData.length > 0 && coins.length > 0;
 
   return (
     <>
-      <DashboardHeader toggleMenu={toggleMenu || (() => {})} />
+    
+      <DashboardHeader />
       
       <div className="dashboard-content">
         <div className="top-cards-row">
