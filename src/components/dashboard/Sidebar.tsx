@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
 import useSWR from 'swr';
 import { Combobox } from '@headlessui/react';
-import { LayoutDashboard, Wallet, ArrowRightLeft, Settings, Search, LogOut, AreaChart, DatabaseZap, Check, ChevronsUpDown } from 'lucide-react';
+import { LayoutDashboard, Wallet, ArrowRightLeft, Settings, LogOut, AreaChart, DatabaseZap, Check, ChevronsUpDown } from 'lucide-react';
 import type { SearchCoin } from '../../pages/api/search-coins';
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
@@ -70,7 +70,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
               filteredCoins.map((coin) => (
                 <Combobox.Option
                   key={coin.id}
-                  // THIS IS THE ONLY LINE THAT CHANGED
                   className={({ active }) => `search-option ${active ? 'search-option--active' : ''}`}
                   value={coin}
                 >
