@@ -81,11 +81,13 @@ const CoinListTable: React.FC<CoinListProps> = ({ coins }) => {
               <td>{index + 1}</td>
               <td>
                 <div className="coin-name-container">
+                  {/* The only change is adding a className here */}
                   <Image 
                     src={coin.image} 
                     alt={coin.symbol} 
                     width={24} 
                     height={24}
+                    className="coin-icon"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/placeholder-coin.png';
@@ -95,7 +97,7 @@ const CoinListTable: React.FC<CoinListProps> = ({ coins }) => {
                 </div>
               </td>
               <td>{formatPrice(coin.current_price)}</td>
-              <td className={coin.price_change_percentage_24h > 0 ? 'text-green' : 'text-red'}>
+              <td className={coin.price_change_percentage_24h > 0 ? 'text-green-500' : 'text-red-500'}>
                 {coin.price_change_percentage_24h ? coin.price_change_percentage_24h.toFixed(2) : '0.00'}%
               </td>
               <td>-</td>
