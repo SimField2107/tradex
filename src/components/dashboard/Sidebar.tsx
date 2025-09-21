@@ -2,8 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
-// 1. Import the new icon
-import { LayoutDashboard, Wallet, ArrowRightLeft, Settings, Search, LogOut, AreaChart } from 'lucide-react';
+import { LayoutDashboard, Wallet, ArrowRightLeft, Settings, Search, LogOut, AreaChart, DatabaseZap } from 'lucide-react';
 
 interface SidebarProps {
   isMenuOpen: boolean;
@@ -12,10 +11,10 @@ interface SidebarProps {
 
 const navLinks = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  // 2. Add the new link for the Market Explorer page
   { href: '/market', label: 'Market', icon: AreaChart },
   { href: '/portfolio', label: 'Portfolio', icon: Wallet },
   { href: '/transactions', label: 'Transactions', icon: ArrowRightLeft },
+  { href: '/staking', label: 'Staking', icon: DatabaseZap },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
