@@ -1,4 +1,4 @@
-import React from 'react';
+
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Layout from '../components/Layout';
 import WalletHeader from '../components/dashboard/WalletHeader';
@@ -84,7 +84,7 @@ export const getServerSideProps = (async () => {
       {
         name: btc.name,
         symbol: btc.symbol.toUpperCase(),
-        logo: btc.image, // Using the real image URL now
+        logo: btc.image, 
         valueUSD: btc.current_price,
         priceChange: btc.price_change_percentage_24h,
         sparkline: btc.sparkline_in_7d.price,
@@ -92,7 +92,7 @@ export const getServerSideProps = (async () => {
       {
         name: eth.name,
         symbol: eth.symbol.toUpperCase(),
-        logo: eth.image, // Using the real image URL now
+        logo: eth.image, 
         valueUSD: eth.current_price,
         priceChange: eth.price_change_percentage_24h,
         sparkline: eth.sparkline_in_7d.price,

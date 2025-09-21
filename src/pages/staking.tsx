@@ -8,7 +8,7 @@ import Image from 'next/image';
 // SWR fetcher function
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-// --- Staking Modal Component ---
+// Staking Modal Component 
 const StakeModal: React.FC<{
   asset: StakeableAsset;
   mode: 'stake' | 'unstake';
@@ -56,7 +56,7 @@ const StakeModal: React.FC<{
 };
 
 
-// --- Asset Row Component ---
+//  Asset Row Component 
 const AssetRow: React.FC<{ asset: StakeableAsset }> = ({ asset }) => {
   const [modalMode, setModalMode] = useState<'stake' | 'unstake' | null>(null);
   const totalStaked = useStakingStore(state => state.getTotalStaked(asset.id));

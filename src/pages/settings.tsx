@@ -1,8 +1,7 @@
-import React from 'react';
 import Layout from '../components/Layout';
 import type { GetStaticProps } from 'next';
 
-// This is the simplified, self-contained input field.
+
 const InputField = ({ label, value, type = 'text' }) => (
   <div>
     <label style={{

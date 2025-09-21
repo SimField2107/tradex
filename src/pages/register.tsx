@@ -54,7 +54,6 @@ const RegisterPage = () => {
         </form>
         <p className="auth-link">
           Already have an account?{' '}
-          {/* 5. Replaced <a> with <Link> */}
           <Link href="/login">
             Log in here
           </Link>

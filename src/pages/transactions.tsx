@@ -1,9 +1,8 @@
-import React from 'react';
 import useSWR from 'swr';
 import Layout from '../components/Layout';
-import type { Transaction } from './api/transactions'; // Import the type from our API route
-import { format } from 'date-fns'; // A library you already have for formatting dates
-import clsx from 'clsx'; // A library you have for conditional class names
+import type { Transaction } from './api/transactions'; 
+import { format } from 'date-fns';
+import clsx from 'clsx'; 
 
 // SWR needs a "fetcher" function to know how to get the data.
 // This simple function uses the browser's fetch API to get our JSON.

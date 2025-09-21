@@ -4,9 +4,8 @@ import Image from 'next/image';
 import Layout from '../../components/Layout';
 import CandlestickChart from '../../components/dashboard/CandlestickChart';
 import { getStaticPaths, getStaticProps } from '../../lib/coinData';
-import type { CoinPageProps } from '../../lib/coinData'; // Import our new props type
+import type { CoinPageProps } from '../../lib/coinData';
 
-// A helper component for displaying key stats
 const StatCard: React.FC<{ title: string; value: string; className?: string }> = ({ title, value, className }) => (
   <div className={`bg-gray-800/50 p-4 rounded-lg ${className}`}>
     <p className="text-sm text-gray-400">{title}</p>
@@ -25,14 +24,14 @@ const CoinPage: React.FC<CoinPageProps> = ({ coin, ohlcData }) => {
     );
   }
 
-  // Helper variables to easily access the nested data from the API
   const marketData = coin.market_data;
   const price = marketData.current_price.usd;
   const priceChange24h = marketData.price_change_percentage_24h;
-  const isPositive = priceChange24h >= 0;
 
-  // Function to safely format large numbers
-  const formatNumber = (num: number) => num ? num.toLocaleString() : 'N/A';
+  // THIS IS THE FIX: We now safely check if the price change is a valid number.
+  const isPositive = priceChange24h !== null && priceChange24h >= 0;
+
+  const formatNumber = (num: number | null | undefined) => num ? num.toLocaleString() : 'N/A';
 
   return (
     <Layout>
@@ -52,9 +51,12 @@ const CoinPage: React.FC<CoinPageProps> = ({ coin, ohlcData }) => {
         {/* --- Price Info --- */}
         <div className="flex items-baseline gap-4 mb-8">
             <p className="text-4xl font-bold text-white">${price.toLocaleString()}</p>
-            <p className={`text-xl font-semibold ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
-                {isPositive ? '▲' : '▼'} {priceChange24h.toFixed(2)}%
-            </p>
+            {/* THIS IS THE FIX: We only render this block if priceChange24h is not null */}
+            {priceChange24h !== null && (
+              <p className={`text-xl font-semibold ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                  {isPositive ? '▲' : '▼'} {priceChange24h.toFixed(2)}%
+              </p>
+            )}
         </div>
 
         {/* --- Candlestick Chart --- */}
@@ -77,7 +79,6 @@ const CoinPage: React.FC<CoinPageProps> = ({ coin, ohlcData }) => {
         {coin.description?.en && (
           <div>
             <h2 className="text-2xl font-bold mb-4 text-white">About {coin.name}</h2>
-            {/* Using dangerouslySetInnerHTML is okay here as the API content is trusted */}
             <div 
               className="prose prose-invert text-gray-300 max-w-none" 
               dangerouslySetInnerHTML={{ __html: coin.description.en }} 
