@@ -38,10 +38,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
   return (
     <div className={`sidebar ${isMenuOpen ? 'mobile-open' : ''}`}>
       <div className="sidebar-header">
-        <div className="logo-container">
-          <div className="logo-icon">AI</div>
-          <span className="logo-text">AI Tradex</span>
-        </div>
+        {/* The logo is now wrapped in a Link component */}
+        <Link href="/" className="cursor-pointer">
+          <div className="logo-container">
+            <div className="logo-icon">AI</div>
+            <span className="logo-text">AI Tradex</span>
+          </div>
+        </Link>
       </div>
 
       <div className="search-bar">
