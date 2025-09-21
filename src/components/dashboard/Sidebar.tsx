@@ -2,16 +2,18 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
-import { LayoutDashboard, Wallet, ArrowRightLeft, Settings, Search, LogOut } from 'lucide-react';
+// 1. Import the new icon
+import { LayoutDashboard, Wallet, ArrowRightLeft, Settings, Search, LogOut, AreaChart } from 'lucide-react';
 
 interface SidebarProps {
   isMenuOpen: boolean;
   toggleMenu: () => void;
 }
 
-// We define our navigation links as an array of objects for easier mapping.
 const navLinks = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  // 2. Add the new link for the Market Explorer page
+  { href: '/market', label: 'Market', icon: AreaChart },
   { href: '/portfolio', label: 'Portfolio', icon: Wallet },
   { href: '/transactions', label: 'Transactions', icon: ArrowRightLeft },
   { href: '/settings', label: 'Settings', icon: Settings },
@@ -23,7 +25,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
 
   const handleLogout = () => {
     logout();
-    // No need to toggle menu on desktop, but essential for mobile
     if (isMenuOpen) {
       toggleMenu();
     }
@@ -52,8 +53,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, toggleMenu }) => {
       <nav className="sidebar-nav">
         <ul>
           {navLinks.map((link) => {
-            // Check if the current path matches the link's href.
-            // For the dashboard, we want an exact match. For others, we can be more lenient.
             const isActive = router.pathname === link.href;
             const Icon = link.icon;
 
